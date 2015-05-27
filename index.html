@@ -1,0 +1,196 @@
+<!doctype html>
+
+<title>Online Code Editor</title>
+<meta charset="utf-8"/>
+
+<link rel="stylesheet" href="codemirror.css">
+<link rel="stylesheet" href="addon/dialog/dialog.css">
+<link rel="stylesheet" href="addon/search/matchesonscrollbar.css">
+<link rel="stylesheet" href="themes.css">
+<script src="codemirror.js"></script>
+<script src="mode/python.js"></script>
+<script src="addon/edit/matchbrackets.js"></script>
+<script src="addon/dialog/dialog.js"></script>
+<script src="addon/search/searchcursor.js"></script>
+<script src="addon/search/search.js"></script>
+<script src="addon/scroll/annotatescrollbar.js"></script>
+<script src="addon/search/matchesonscrollbar.js"></script>
+<style type="text/css">
+body{ font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;}
+.btn{
+margin: 10px 10px;
+padding: 5px 8px;
+font-size: 16px;
+line-height: 1.33;
+border-radius: 3px;
+color: #333;
+border-color: #ccc;
+cursor: pointer;
+text-align: center;
+white-space: nowrap;
+border: 1px solid rgb(194, 194, 194);}
+.btn:hover{background-color:#afd9ee;}
+dt {
+  font-family: monospace;
+  color: #666;
+}
+.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>
+
+<h2>Online Code Editor</h2>
+<h3 id="heading">Mode: Python</h3>
+
+    <div id="ta"><textarea id="code" name="code"></textarea></div><br>
+
+    <script>
+function selectTheme() {
+  var a=document.getElementById("select");
+  var theme = a.options[a.selectedIndex].innerHTML;
+  editor.setOption("theme", theme);
+}
+function loadScript(url, callback) {
+	// Adding the script tag to the head as suggested before
+	var head = document.getElementsByTagName('head')[0];
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = url;
+
+	// Then bind the event to the callback function.
+	// There are several events for cross browser compatibility.
+	script.onreadystatechange = callback;
+	script.onload = callback;
+
+	// Fire the loading
+	head.appendChild(script);
+}
+function removejscssfile(filename, filetype){
+    var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist from
+    var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
+    var allsuspects=document.getElementsByTagName(targetelement)
+    for (var i=allsuspects.length; i>=0; i--){ //search backwards within nodelist for matching elements to remove
+    if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1)
+        allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
+    }
+}
+var editor;
+var init = function(lang, user_mode) {
+		switch (lang) {
+			case "python":
+				editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+					mode: {
+						name: lang,
+						version: 3,
+						singleLineStringErrors: false
+					},
+					lineNumbers: true,
+					indentUnit: 4,
+					indentWithTabs: true,
+					matchBrackets: true
+				});
+				break;
+			case "clike":
+				editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+					lineNumbers: true,
+					matchBrackets: true,
+					indentWithTabs: true,
+					mode: user_mode
+				});
+				break;
+		}
+	};
+
+loadScript("mode/python.js", init('python',''));
+var lang = ["APL", "ASN.1", "Asterisk dialplan", "C", "C++", "C#", "Clojure", "CMake", "COBOL", "CoffeeScript", "Common Lisp", "CSS", "Cypher", "Cython", "D", "Dart", "Django (templating language)", "Dockerfile", "diff", "DTD", "Dylan", "EBNF", "ECL", "Eiffel", "Erlang", "Forth", "Fortran", "F#", "Gas (AT&T-style assembly)", "Gherkin", "Go", "Groovy", "HAML", "Handlebars", "Haskell", "Haxe", "HTML embedded (JSP, ASP.NET)", "HTML mixed-mode", "HTTP", "IDL", "Java", "Jade", "JavaScript", "Jinja2", "Julia", "Kotlin", "LESS", "LiveScript", "Lua", "Markdown (GitHub-flavour)", "Mathematica", "mIRC", "Modelica", "MUMPS", "Nginx", "NTriples", "Objective C", "OCaml", "Octave (MATLAB)", "Pascal", "PEG.js", "Perl", "PGP (ASCII armor)", "PHP", "Pig Latin", "Properties files", "Puppet", "Python", "Q", "R", "RPM", "reStructuredText", "Ruby", "Rust", "Sass", "Spreadsheet", "Scala", "Scheme", "SCSS", "Shell", "Sieve", "Slim", "Smalltalk", "Smarty", "Solr", "Soy", "Stylus", "SQL (several dialects)", "SPARQL", "sTeX, LaTeX", "Tcl", "Textile", "Tiddlywiki", "Tiki wiki", "TOML", "Tornado (templating language)", "troff (for manpages)", "TTCN", "TTCN Configuration", "Turtle", "VB.NET", "VBScript", "Velocity", "Verilog/SystemVerilog", "XML/HTML", "XQuery", "YAML", "Z80"];
+var lang_lowercase = ["apl", "asn.1", "asterisk dialplan", "c", "c++", "c#", "clojure", "cmake", "cobol", "coffeescript", "common lisp", "css", "cypher", "cython", "d", "dart", "django (templating language)", "dockerfile", "diff", "dtd", "dylan", "ebnf", "ecl", "eiffel", "erlang", "forth", "fortran", "f#", "gas (at&t-style assembly)", "gherkin", "go", "groovy", "haml", "handlebars", "haskell", "haxe", "html embedded (jsp, asp.net)", "html mixed-mode", "http", "idl", "java", "jade", "javascript", "jinja2", "julia", "kotlin", "less", "livescript", "lua", "markdown (github-flavour)", "mathematica", "mirc", "modelica", "mumps", "nginx", "ntriples", "objective c", "ocaml", "octave (matlab)", "pascal", "peg.js", "perl", "pgp (ascii armor)", "php", "pig latin", "properties files", "puppet", "python", "q", "r", "rpm", "restructuredtext", "ruby", "rust", "sass", "spreadsheet", "scala", "scheme", "scss", "shell", "sieve", "slim", "smalltalk", "smarty", "solr", "soy", "stylus", "sql (several dialects)", "sparql", "stex, latex", "tcl", "textile", "tiddlywiki", "tiki wiki", "toml", "tornado (templating language)", "troff (for manpages)", "ttcn", "ttcn configuration", "turtle", "vb.net", "vbscript", "velocity", "verilog/systemverilog", "xml/html", "xquery", "yaml", "z80"];
+var b = ["apl", "asn.1", "asterisk", "text/x-csrc","text/x-c++src","text/x-csharp", "clojure", "cmake", "cobol", "coffeescript", "commonlisp", "css", "cypher", "cython", "d", "dart", "django (templating language)", "dockerfile", "diff", "dtd", "dylan", "ebnf", "ecl", "eiffel", "erlang", "forth", "fortran", "f#", "gas (at&t-style assembly)", "gherkin", "go", "groovy", "haml", "handlebars", "haskell", "haxe", "html embedded (jsp, asp.net)", "html mixed-mode", "http", "idl", "text/x-java", "jade", "javascript", "jinja2", "julia", "kotlin", "less", "livescript", "lua", "markdown", "mathematica", "mirc", "modelica", "mumps", "nginx", "ntriples", "text/x-objectivec", "ocaml", "octave (matlab)", "pascal", "peg.js", "perl", "asciiarmor", "php", "pig latin", "properties files", "puppet", "python", "q", "r", "rpm", "restructuredtext", "ruby", "rust", "sass", "spreadsheet", "text/x-scala", "scheme", "scss", "shell", "sieve", "slim", "smalltalk", "smarty", "solr", "soy", "stylus", "sql (several dialects)", "sparql", "stex, latex", "tcl", "textile", "tiddlywiki", "tiki wiki", "toml", "tornado (templating language)", "troff (for manpages)", "ttcn", "ttcn configuration", "turtle", "vb.net", "vbscript", "velocity", "verilog/systemverilog", "xml/html", "xquery", "yaml", "z80"];
+var last_language="";
+function initlang(lang_name,js_name,user_mode) {
+	str = editor.getValue();
+	console.log(editor.getValue());
+	document.getElementById("ta").innerHTML = '<textarea id="code" name="code"></textarea>';
+	document.getElementById("heading").innerHTML = 'Mode: '+lang_name;
+	document.getElementById("lang_result").innerHTML = '';
+	removejscssfile(last_language, "js");
+	loadScript("mode/" + js_name + ".js", init(js_name,user_mode));
+	editor.setValue(str)
+	last_language="mode/" + js_name + ".js";
+}
+function searchLang() {
+    var a = document.getElementById("lang_search").value;
+   var s = "";
+    for (var i = 0; i < lang.length; i++) {
+        a = a.toLowerCase();
+        if (a.indexOf(lang_lowercase[i]) >= 0 || lang_lowercase[i].indexOf(a) >= 0) {
+		mode='';
+		var lang_name='',disp_name='',file_name='';
+            switch (b[i]) {
+                case "text/x-csrc":
+                case "text/x-c++src":
+                case "text/x-csharp":
+                case "text/x-java":
+                case "text/x-scala":
+                case "text/x-objectivec":
+					lang_name=lang[i];
+					disp_name=lang[i];
+					file_name='clike';
+					mode=b[i];
+                    break;
+                default:
+                    lang_name=lang[i];
+					disp_name=lang[i];
+					file_name=b[i];
+                    break;
+            }
+			s += "<input type='button' class='btn' onclick='initlang(\"" + lang_name + "\",\"" + file_name + "\",\""+mode+"\")' value='" + disp_name + "'>";
+        }
+    }
+    document.getElementById("lang_result").innerHTML = s;
+}
+    </script>
+Choose your language: <input type="text" id="lang_search" placeholder="Type and search" onkeyup="searchLang();"> <span style="font-size:0.8em">If the editor is disfunctional, select the language again.</span><div id="lang_result"></div><br>
+Select a theme: <select onchange="selectTheme()" id=select>
+    <option selected>default</option>
+    <option>3024-day</option>
+    <option>3024-night</option>
+    <option>ambiance</option>
+    <option>base16-dark</option>
+    <option>base16-light</option>
+    <option>blackboard</option>
+    <option>cobalt</option>
+    <option>colorforth</option>
+    <option>eclipse</option>
+    <option>elegant</option>
+    <option>erlang-dark</option>
+    <option>lesser-dark</option>
+    <option>liquibyte</option>
+    <option>mbo</option>
+    <option>mdn-like</option>
+    <option>midnight</option>
+    <option>monokai</option>
+    <option>neat</option>
+    <option>neo</option>
+    <option>night</option>
+    <option>paraiso-dark</option>
+    <option>paraiso-light</option>
+    <option>pastel-on-dark</option>
+    <option>rubyblue</option>
+    <option>solarized dark</option>
+    <option>solarized light</option>
+    <option>the-matrix</option>
+    <option>tomorrow-night-bright</option>
+    <option>tomorrow-night-eighties</option>
+    <option>ttcn</option>
+    <option>twilight</option>
+    <option>vibrant-ink</option>
+    <option>xq-dark</option>
+    <option>xq-light</option>
+    <option>zenburn</option>
+</select>
+<h3>instruction:</h3>
+<dl>
+      <dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>
+      <dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>
+      <dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>
+      <dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
+      <dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
+    </dl>
+<footer>Adapted from <a href="http://codemirror.net/">http://codemirror.net/</a></footer>

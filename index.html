@@ -145,6 +145,19 @@ function searchLang() {
     }
     document.getElementById("lang_result").innerHTML = s;
 }
+function show_tab(){
+var c = document.getElementsByClassName('cm-tab');
+if (!document.getElementById("show_tab").checked){
+  for(i=0; i<c.length; i++) {
+    c[i].style.textDecoration = 'none';
+  }
+  }else{
+  
+  for(i=0; i<c.length; i++) {
+    c[i].style.textDecoration = 'line-through';
+  }
+  }
+}
     </script>
 Choose your language: <input type="text" id="lang_search" placeholder="Type and search" onkeyup="searchLang();"> <span style="font-size:0.8em">If the editor is disfunctional, select the language again.</span><div id="lang_result"></div><br>
 Select a theme: <select onchange="selectTheme()" id=select>
@@ -184,7 +197,8 @@ Select a theme: <select onchange="selectTheme()" id=select>
     <option>xq-dark</option>
     <option>xq-light</option>
     <option>zenburn</option>
-</select>
+</select><br>
+<label><input type="checkbox" id="show_tab" onclick="show_tab()" checked>Show tab</label>
 <h3>instruction:</h3>
 <dl>
       <dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>

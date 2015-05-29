@@ -72,6 +72,14 @@ function removejscssfile(filename, filetype){
     }
 }
 var editor;
+function set_tab(){
+var a=document.getElementById("use_space").checked;
+if(a){
+editor.setOption("indentString",document.getElementById("cust_indent").value);
+}else{
+editor.setOption("indentString","\t");
+}
+}
 var init = function(lang, user_mode) {
 		switch (lang) {
 			case "python":
@@ -145,19 +153,44 @@ function searchLang() {
     }
     document.getElementById("lang_result").innerHTML = s;
 }
-function show_tab(){
-var c = document.getElementsByClassName('cm-tab');
-if (!document.getElementById("show_tab").checked){
-  for(i=0; i<c.length; i++) {
-    c[i].style.textDecoration = 'none';
-  }
-  }else{
-  
-  for(i=0; i<c.length; i++) {
-    c[i].style.textDecoration = 'line-through';
-    c[i].style.textDecorationStyle = 'dotted';
-  }
-  }
+function indent_decode(){
+var cust_indent = document.getElementById("cust_indent").value;
+cust_indent=cust_indent.replace(/\\t/g,"	");
+	var count=[" & one "," & two "," & three "," & four "," & five "," & six "," & seven "," & eight "," & many "];
+	var p=cust_indent.split("");
+	var s="";var a=0;
+	for(var i=0;i<p.length;i++){
+	var c=cust_indent.substr(i,1);
+	if(c==cust_indent.substr(i+1,1)){
+	a++;
+	}else{
+	switch(c){
+	case " ":
+	c="blankspace";
+	break;
+	case "\t":
+	c="tab";	
+	}
+	a=a>8?8:a;
+	s+=count[a]+c;
+	a=0;
+	}
+	}
+	if(s.length<0){
+	switch(c){
+	case " ":
+	c="blankspace";
+	break;
+	case "\t":
+	c="tab";	
+	}
+	a=a>8?8:a;
+	s=count[a]+c;
+	}
+	s=s.replace(/^ & /,"")
+	
+	document.getElementById("indent_s").innerHTML=s;
+	set_tab();
 }
     </script>
 Choose your language: <input type="text" id="lang_search" placeholder="Type and search" onkeyup="searchLang();"> <span style="font-size:0.8em">If the editor is disfunctional, select the language again.</span><div id="lang_result"></div><br>
@@ -199,7 +232,7 @@ Select a theme: <select onchange="selectTheme()" id=select>
     <option>xq-light</option>
     <option>zenburn</option>
 </select><br>
-<label><input type="checkbox" id="show_tab" onclick="show_tab()" checked>Show tab</label>
+<label><input type="checkbox" id="use_space" onclick="set_tab()" checked>Customise Indentation (tab is \t): </label> <input type="text" id="cust_indent" size="8" onKeyUp="indent_decode()" value="    "/> (<span id="indent_s">four blankspace</span>)<br>
 <h3>instruction:</h3>
 <dl>
       <dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>

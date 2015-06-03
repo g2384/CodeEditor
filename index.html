@@ -41,7 +41,56 @@ dt {
 
     <div id="ta"><textarea id="code" name="code"></textarea></div><br>
 
-    <script>
+Choose your language: <input type="text" id="lang_search" placeholder="Type and search" onkeyup="searchLang();"> <span style="font-size:0.8em">If the editor is disfunctional, select the language again.</span><div id="lang_result"></div><br>
+Select a theme: <select onchange="selectTheme()" id=select>
+    <option selected>default</option>
+    <option>3024-day</option>
+    <option>3024-night</option>
+    <option>ambiance</option>
+    <option>base16-dark</option>
+    <option>base16-light</option>
+    <option>blackboard</option>
+    <option>cobalt</option>
+    <option>colorforth</option>
+    <option>eclipse</option>
+    <option>elegant</option>
+    <option>erlang-dark</option>
+    <option>lesser-dark</option>
+    <option>liquibyte</option>
+    <option>mbo</option>
+    <option>mdn-like</option>
+    <option>midnight</option>
+    <option>monokai</option>
+    <option>neat</option>
+    <option>neo</option>
+    <option>night</option>
+    <option>paraiso-dark</option>
+    <option>paraiso-light</option>
+    <option>pastel-on-dark</option>
+    <option>rubyblue</option>
+    <option>solarized dark</option>
+    <option>solarized light</option>
+    <option>the-matrix</option>
+    <option>tomorrow-night-bright</option>
+    <option>tomorrow-night-eighties</option>
+    <option>ttcn</option>
+    <option>twilight</option>
+    <option>vibrant-ink</option>
+    <option>xq-dark</option>
+    <option>xq-light</option>
+    <option>zenburn</option>
+</select><br>
+<label><input type="checkbox" id="use_space" onclick="set_tab()" checked>Customise Indentation (tab is \t): </label> <input type="text" id="cust_indent" size="8" onKeyUp="indent_decode()" value="    "/> (<span id="indent_s">four blankspace</span>)<br>
+<h3>instruction:</h3>
+<dl>
+      <dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>
+      <dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>
+      <dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>
+      <dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
+      <dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
+    </dl>
+<footer>Adapted from <a href="http://codemirror.net/">http://codemirror.net/</a></footer>
+ <script>
 function selectTheme() {
   var a=document.getElementById("select");
   var theme = a.options[a.selectedIndex].innerHTML;
@@ -75,12 +124,14 @@ var editor;
 function set_tab(){
 var a=document.getElementById("use_space").checked;
 if(a){
-editor.setOption("indentString",document.getElementById("cust_indent").value);
+editor.setOption("indentStr",document.getElementById("cust_indent").value);
 }else{
-editor.setOption("indentString","\t");
+editor.setOption("indentStr","\t");
+console.log("e")
 }
 }
 var init = function(lang, user_mode) {
+
 		switch (lang) {
 			case "python":
 				editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -104,6 +155,7 @@ var init = function(lang, user_mode) {
 				});
 				break;
 		}
+			set_tab();
 	};
 
 loadScript("mode/python.js", init('python',''));
@@ -121,6 +173,7 @@ function initlang(lang_name,js_name,user_mode) {
 	loadScript("mode/" + js_name + ".js", init(js_name,user_mode));
 	editor.setValue(str)
 	last_language="mode/" + js_name + ".js";
+
 }
 function searchLang() {
     var a = document.getElementById("lang_search").value;
@@ -193,52 +246,3 @@ cust_indent=cust_indent.replace(/\\t/g,"	");
 	set_tab();
 }
     </script>
-Choose your language: <input type="text" id="lang_search" placeholder="Type and search" onkeyup="searchLang();"> <span style="font-size:0.8em">If the editor is disfunctional, select the language again.</span><div id="lang_result"></div><br>
-Select a theme: <select onchange="selectTheme()" id=select>
-    <option selected>default</option>
-    <option>3024-day</option>
-    <option>3024-night</option>
-    <option>ambiance</option>
-    <option>base16-dark</option>
-    <option>base16-light</option>
-    <option>blackboard</option>
-    <option>cobalt</option>
-    <option>colorforth</option>
-    <option>eclipse</option>
-    <option>elegant</option>
-    <option>erlang-dark</option>
-    <option>lesser-dark</option>
-    <option>liquibyte</option>
-    <option>mbo</option>
-    <option>mdn-like</option>
-    <option>midnight</option>
-    <option>monokai</option>
-    <option>neat</option>
-    <option>neo</option>
-    <option>night</option>
-    <option>paraiso-dark</option>
-    <option>paraiso-light</option>
-    <option>pastel-on-dark</option>
-    <option>rubyblue</option>
-    <option>solarized dark</option>
-    <option>solarized light</option>
-    <option>the-matrix</option>
-    <option>tomorrow-night-bright</option>
-    <option>tomorrow-night-eighties</option>
-    <option>ttcn</option>
-    <option>twilight</option>
-    <option>vibrant-ink</option>
-    <option>xq-dark</option>
-    <option>xq-light</option>
-    <option>zenburn</option>
-</select><br>
-<label><input type="checkbox" id="use_space" onclick="set_tab()" checked>Customise Indentation (tab is \t): </label> <input type="text" id="cust_indent" size="8" onKeyUp="indent_decode()" value="    "/> (<span id="indent_s">four blankspace</span>)<br>
-<h3>instruction:</h3>
-<dl>
-      <dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>
-      <dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>
-      <dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>
-      <dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
-      <dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
-    </dl>
-<footer>Adapted from <a href="http://codemirror.net/">http://codemirror.net/</a></footer>
